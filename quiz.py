@@ -3,23 +3,21 @@ import json
 import html
 from translate import Translator
 
-response = requests.get("https://opentdb.com/api.php?amount=10&type=boolean")
-result = json.loads(response.text)
-
 
 class QuestionWithAnswer:
-    def __init__(self, num_of_questions, language):
+    def __init__(self, num_of_questions, language, result):
         self.language = language
+        self.result = result
         self.questions = []
         self.answers = []
         self.num_of_qestions = num_of_questions
 
     def append_questions_and_ansers(self):
         for i in range(self.num_of_qestions):
-            question = html.unescape(result['results'][i]['question'])
+            question = html.unescape(self.result['results'][i]['question'])
             translator = Translator(from_lang='en', to_lang=self.language)
             translation = translator.translate(question)
-            answer = html.unescape(result['results'][i]['correct_answer'])
+            answer = html.unescape(self.result['results'][i]['correct_answer'])
             if answer == "True":
                 answer = True
             else:
@@ -44,9 +42,14 @@ class QuestionWithAnswer:
         print(f"Liczba zdobytych punktów: {points}")
 
 
-first_game = QuestionWithAnswer(10, 'pl')
-first_game.append_questions_and_ansers()
-first_game.display_questions()
+def main():
+    response = requests.get("https://opentdb.com/api.php?amount=10&type=boolean")
+    result = json.loads(response.text)
+    first_game = QuestionWithAnswer(10, 'pl', result)
+    first_game.append_questions_and_ansers()
+    first_game.display_questions()
 
 
+if __name__ == "__main__":
+    main()
 
