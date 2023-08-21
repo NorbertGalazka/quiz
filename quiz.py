@@ -64,8 +64,7 @@ def main():
     for key, value in sentences.items():
         translator = Translator(from_lang='en', to_lang=chosen_lang)
         translation = translator.translate(value)
-        print(translation)
-        sentences.update({key:translation})
+        sentences.update({key : translation})
 
     response = requests.get("https://opentdb.com/api.php?amount=10&type=boolean")
     result = json.loads(response.text)
